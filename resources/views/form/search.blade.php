@@ -41,7 +41,7 @@
                             <td>{{$form->password}}</td>
                             <td>{{$form->select}}</td>
                             <td>
-                                @if (count($form->multi_select))
+                                @if (isset($form->multi_select))
                                     <ul>
                                         @foreach ($form->multi_select as $select)
                                             <li>{{$select}}</li>
@@ -54,7 +54,7 @@
                             </td>
                             <td>{{$form->radio}}</td>
                             <td>
-                                @if (count($form->checkbox))
+                                @if (isset($form->checkbox))
                                     <ul>
                                         @foreach ($form->checkbox as $checkbox)
                                             <li>{{$checkbox}}</li>
