@@ -17,7 +17,7 @@ Route::get('/', function () {
     return redirect()->route('forms.index');
 });
 Route::resource('forms','FormController');
-Route::post('search','FormController@show')->name('search');
+Route::get('search','FormController@search')->name('search');
 
 Auth::routes(['login'=>false,'register'=>false]);
 
