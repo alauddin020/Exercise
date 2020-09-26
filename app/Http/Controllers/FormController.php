@@ -10,7 +10,8 @@ class FormController extends Controller
 
     public function index()
     {
-       return $forms = Form::all();
+        $forms = Form::all();
+        return view('form.index',compact('forms'));
 
     }
 
@@ -42,26 +43,18 @@ class FormController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Form  $form
-     * @return \Illuminate\Http\Response
-     */
     public function show(Form $form)
     {
-        //
+
+    }
+    public function search(Request $request)
+    {
+        return Form::where($request->key,'like', '%' . $request->search . '%')->get();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Form  $form
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Form $form)
     {
-        //
+        return view('form.edit',compact('form'));
     }
 
     /**
@@ -73,7 +66,23 @@ class FormController extends Controller
      */
     public function update(Request $request, Form $form)
     {
-        //
+        $input = $request->except(['_token','_method']);
+        if ($request->has('checkbox'))
+        {
+            $input['checkbox'] = $request->checkbox;
+        }
+        if ($request->has('multi_select'))
+        {
+            $input['multi_select'] = $request->multi_select;
+        }
+        if ($request->hasFile('file'))
+        {
+            $filename = $request->file->getClientOriginalName();
+            $request->file->storeAs('images',$filename,'public');
+            $input['file'] = $filename;
+        }
+        $form->update($input);
+        return redirect()->back();
     }
 
     /**
