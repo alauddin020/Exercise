@@ -10,28 +10,36 @@ class FormController extends Controller
 
     public function index()
     {
-        return view('form');
+       return $forms = Form::all();
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        //
+        return view('form.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //
+        $input = $request->except('_token');
+        if ($request->has('checkbox'))
+        {
+            $input['checkbox'] = $request->checkbox;
+        }
+        if ($request->has('multi_select'))
+        {
+            $input['multi_select'] = $request->multi_select;
+        }
+        if ($request->hasFile('file'))
+        {
+            $filename = $request->file->getClientOriginalName();
+            $request->file->storeAs('images',$filename,'public');
+            $input['file'] = $filename;
+        }
+        Form::create($input);
+        return redirect()->back();
     }
 
     /**
