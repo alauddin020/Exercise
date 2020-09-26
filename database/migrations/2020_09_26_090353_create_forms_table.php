@@ -15,6 +15,22 @@ class CreateFormsTable extends Migration
     {
         Schema::create('forms', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('number')->nullable();
+            $table->string('password')->nullable();
+            $table->string('select')->nullable();
+            $table->string('multi_select')->nullable();
+            $table->text('textarea')->nullable();
+            $table->string('radio')->nullable();
+            $table->string('checkbox')->nullable();
+            $table->string('color')->nullable();
+            $table->string('date')->nullable();
+            $table->string('local_date')->nullable();
+            $table->string('month')->nullable();
+            $table->string('file')->nullable();
+            $table->string('time')->nullable();
+            $table->string('week')->nullable();
             $table->timestamps();
         });
     }
