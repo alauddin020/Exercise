@@ -49,7 +49,21 @@ class FormController extends Controller
     }
     public function search(Request $request)
     {
-        return Form::where($request->key,'like', '%' . $request->search . '%')->get();
+        $search = Form::query();
+        if ($request->has('search') && $request->has('key'))
+        {
+            if ($request->key !='')
+            {
+                $forms = $search->where($request->key,'like', '%' . $request->search . '%')->get();
+                return view('form.search',compact('forms'));
+            }
+            else
+            {
+                abort(403,'key value empty');
+            }
+
+        }
+        return redirect()->back();
     }
 
     public function edit(Form $form)
@@ -82,17 +96,11 @@ class FormController extends Controller
             $input['file'] = $filename;
         }
         $form->update($input);
-        return redirect()->back();
+        return redirect()->route('forms.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Form  $form
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Form $form)
     {
-        //
+       $form->delete();
     }
 }
