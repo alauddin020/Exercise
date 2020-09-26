@@ -37,8 +37,8 @@
                                 <label for="select" class="col-sm-2 col-form-label">Select</label>
                                 <div class="col-sm-10">
                                     <select name="select" id="select" class="form-control">
-                                        <option value="home" {{$form->selct=='home' ?'selected' : ''}}>Home</option>
-                                        <option value="office" {{$form->selct=='office' ?'selected' : ''}}>Home</option>
+                                        <option value="home" {{$form->select=='home' ?'selected' : ''}}>Home</option>
+                                        <option value="office" {{$form->select=='office' ?'selected' : ''}}>Office</option>
                                     </select>
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                                 <div class="col-sm-10">
                                     <select multiple name="multi_select[]" id="select" class="form-control">
                                         @php $a = ['home','office','other']; $c = []; @endphp
-                                        @if (count($form->multi_select))
+                                        @if (isset($form->multi_select))
                                             @foreach ($form->multi_select as $select)
                                                 <?php $c[] = $select;?>
                                             <option value="{{$select}}" selected>{{ucfirst($select)}}</option>
@@ -92,7 +92,7 @@
                                 <div class="col-sm-2">Checkbox</div>
                                 <div class="col-sm-10">
                                     @php $f = ['html','css','php','js']; $d = []; @endphp
-                                    @if (count($form->checkbox))
+                                    @if (isset($form->checkbox))
                                         @foreach ($form->checkbox as $key=>$checkbox)
                                             <?php $d[] = $checkbox;?>
                                                 <div class="form-check">
