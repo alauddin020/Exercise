@@ -17,7 +17,8 @@ Route::get('/', function () {
     return redirect()->route('forms.index');
 });
 Route::resource('forms','FormController');
+Route::post('search','FormController@show')->name('search');
 
-Auth::routes();
+Auth::routes(['login'=>false,'register'=>false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
