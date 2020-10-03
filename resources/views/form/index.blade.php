@@ -26,6 +26,7 @@
         let siteUrl = '{{URL::to('/')}}';
         let search = '';
         let type = '';
+
         function searchData(val)
         {
             search = val;
@@ -97,5 +98,20 @@
                 console.log($(this).attr('href'));
             });
         });
+    </script>
+    <script>
+        deleteData=(route,id)=> {
+            $.ajax({
+                url: route,
+                type: 'DELETE',
+                data: {
+                    _token: '{{csrf_token()}}'
+                },
+                success: function (data) {
+                    $('#' + id).hide();
+                    alert('Delete Successfully')
+                }
+            });
+        }
     </script>
 @endsection
