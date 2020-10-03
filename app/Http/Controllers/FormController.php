@@ -4,18 +4,80 @@ namespace App\Http\Controllers;
 
 use App\Form;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class FormController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $forms = Form::all();
-        return view('form.index',compact('forms'));
+        //$forms = Form::all();
+        //,'textarea','month','password','color','date','time','created_at'
+        if ($request->ajax()) {
+            $data = Form::addSelect('id','name','email','number','password')
+                ->latest()->get();
+            return Datatables::of($data)
+                ->addColumn('action', function($row){
+                    $action = '<a class="btn btn-info" id="show-user" data-toggle="modal" data-id='.$row->id.'>Show</a>
+                    <a class="btn btn-success" id="edit-user" data-toggle="modal" data-id='.$row->id.'>Edit </a>
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                    <a id="delete-user" data-id='.$row->id.' class="btn btn-danger delete-user">Delete</a>';
+                    return $action;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        return view('datatable.index');
 
     }
 
+    public function custom(Request $request)
+    {
+        if ($request->ajax())
+        {
+            if ($request->has('search'))
+            {
+                $forms = Form::where('name','like', '%' . $request->search . '%')
+                    ->orWhere('email','like', '%' . $request->search . '%')
+                    ->orWhere('number','like', '%' . $request->search . '%')
+                    ->orWhere('textarea','like', '%' . $request->search . '%')
+                    ->orWhere('select','like', '%' . $request->search . '%')
+                    ->orWhere('radio','like', '%' . $request->search . '%')
+                    ->orWhere('date','like', '%' . $request->search . '%')
+                    ->orWhere('month','like', '%' . $request->search . '%')
+                    ->orWhere('time','like', '%' . $request->search . '%')
+                    ->orWhere('week','like', '%' . $request->search . '%')
+                    ->paginate(25);
+                $pagination = $forms->appends ( array (
+                    'search'   => $request->search,
+                ) );
+                return $data = view('form.filter',['forms'=>$forms])->withQuery ( $pagination )->render();
+            }
+            $forms = Form::paginate(25);
+            return  $data = view('form.custom',compact('forms'))->render();
+        }
+//        $forms = Form::paginate(25);
+        return view('form.index');
+    }
 
+//    public function customSearch(Request $request)
+//    {
+//       $forms = Form::where('name','like', '%' . $request->search . '%')
+//                    ->orWhere('email','like', '%' . $request->search . '%')
+//                    ->orWhere('number','like', '%' . $request->search . '%')
+//                    ->orWhere('textarea','like', '%' . $request->search . '%')
+//                    ->orWhere('select','like', '%' . $request->search . '%')
+//                    ->orWhere('radio','like', '%' . $request->search . '%')
+//                    ->orWhere('date','like', '%' . $request->search . '%')
+//                    ->orWhere('month','like', '%' . $request->search . '%')
+//                    ->orWhere('time','like', '%' . $request->search . '%')
+//                    ->orWhere('week','like', '%' . $request->search . '%')
+//                    ->paginate(25);
+//        $pagination = $forms->appends ( array (
+//            'search'   => $request->search,
+//        ) );
+//       return $data = view('form.filter',['forms'=>$forms])->withQuery ( $pagination )->render();
+//    }
     public function create()
     {
         return view('form.create');

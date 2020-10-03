@@ -78,7 +78,7 @@
                 </div>
             </div>
         </nav>
-           <div class="container-lg">
+           <div>
                @yield('content')
            </div>
     </div>
