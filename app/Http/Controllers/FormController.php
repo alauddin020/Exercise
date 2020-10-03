@@ -19,9 +19,7 @@ class FormController extends Controller
             return Datatables::of($data)
                 ->addColumn('action', function($row){
                     $action = '<a class="btn btn-info" id="show-user" data-toggle="modal" data-id='.$row->id.'>Show</a>
-                    <a class="btn btn-success" id="edit-user" data-toggle="modal" data-id='.$row->id.'>Edit </a>
-                    <meta name="csrf-token" content="{{ csrf_token() }}">
-                    <a id="delete-user" data-id='.$row->id.' class="btn btn-danger delete-user">Delete</a>';
+                    ';
                     return $action;
                 })
                 ->rawColumns(['action'])
@@ -38,6 +36,7 @@ class FormController extends Controller
             if ($request->has('search'))
             {
                 $forms = Form::where('name','like', '%' . $request->search . '%')
+                    ->orWhere('id','like', '%' . $request->search . '%')
                     ->orWhere('email','like', '%' . $request->search . '%')
                     ->orWhere('number','like', '%' . $request->search . '%')
                     ->orWhere('textarea','like', '%' . $request->search . '%')
