@@ -14,13 +14,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    //return redirect()->route('forms.index');
     return view('form.choose');
 });
 Route::resource('forms','FormController');
-Route::get('search','FormController@search')->name('search');
+
 Route::get('custom','FormController@custom')->name('custom');
-//Route::get('custom-search','FormController@customSearch')->name('custom.search');
 
 Auth::routes(['login'=>false,'register'=>false]);
 

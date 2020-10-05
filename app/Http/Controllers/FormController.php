@@ -8,17 +8,15 @@ use Yajra\DataTables\DataTables;
 
 class FormController extends Controller
 {
-
+    //TODO:: use data tables library in laravel
     public function index(Request $request)
     {
-        //$forms = Form::all();
-        //,'textarea','month','password','color','date','time','created_at'
         if ($request->ajax()) {
             $data = Form::addSelect('id','name','email','number','password')
                 ->latest()->get();
             return Datatables::of($data)
                 ->addColumn('action', function($row){
-                    $action = '<a class="btn btn-info" id="show-user" data-toggle="modal" data-id='.$row->id.'>Show</a>
+                    $action = '<a class="btn btn-info" id="show-user" href="/forms/'.$row->id.'/edit">Edit</a>
                     ';
                     return $action;
                 })
@@ -28,9 +26,10 @@ class FormController extends Controller
         return view('datatable.index');
 
     }
-
+    //TODO:: large data filtering in custom search
     public function custom(Request $request)
     {
+       $forms = Form::paginate(25);
         if ($request->ajax())
         {
             if ($request->has('search'))
@@ -52,37 +51,17 @@ class FormController extends Controller
                 ) );
                 return $data = view('form.filter',['forms'=>$forms])->withQuery ( $pagination )->render();
             }
-            $forms = Form::paginate(25);
             return  $data = view('form.custom',compact('forms'))->render();
         }
-//        $forms = Form::paginate(25);
-        return view('form.index');
+        return view('form.index',compact('forms'));
     }
-
-//    public function customSearch(Request $request)
-//    {
-//       $forms = Form::where('name','like', '%' . $request->search . '%')
-//                    ->orWhere('email','like', '%' . $request->search . '%')
-//                    ->orWhere('number','like', '%' . $request->search . '%')
-//                    ->orWhere('textarea','like', '%' . $request->search . '%')
-//                    ->orWhere('select','like', '%' . $request->search . '%')
-//                    ->orWhere('radio','like', '%' . $request->search . '%')
-//                    ->orWhere('date','like', '%' . $request->search . '%')
-//                    ->orWhere('month','like', '%' . $request->search . '%')
-//                    ->orWhere('time','like', '%' . $request->search . '%')
-//                    ->orWhere('week','like', '%' . $request->search . '%')
-//                    ->paginate(25);
-//        $pagination = $forms->appends ( array (
-//            'search'   => $request->search,
-//        ) );
-//       return $data = view('form.filter',['forms'=>$forms])->withQuery ( $pagination )->render();
-//    }
+    //TODO::  New Data create in database
     public function create()
     {
         return view('form.create');
     }
 
-
+    //TODO:: Data store in database
     public function store(Request $request)
     {
         $input = $request->except('_token');
@@ -108,6 +87,7 @@ class FormController extends Controller
     {
 
     }
+    //TODO:: local Search form specific key type
     public function search(Request $request)
     {
         $search = Form::query();
@@ -126,19 +106,12 @@ class FormController extends Controller
         }
         return redirect()->back();
     }
-
+    //TODO:: Edit Data Show in blade file
     public function edit(Form $form)
     {
         return view('form.edit',compact('form'));
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Form  $form
-     * @return \Illuminate\Http\Response
-     */
+    //TODO:: Update Data
     public function update(Request $request, Form $form)
     {
         $input = $request->except(['_token','_method']);
@@ -157,9 +130,10 @@ class FormController extends Controller
             $input['file'] = $filename;
         }
         $form->update($input);
-        return redirect()->route('forms.index');
+        return redirect()->route('custom')->with('message','Information Update Successfull');
     }
 
+    //TODO:: Form Data Delete From Database
     public function destroy(Form $form)
     {
        $form->delete();

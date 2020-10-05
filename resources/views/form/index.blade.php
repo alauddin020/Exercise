@@ -5,6 +5,15 @@
             <strong>All Data</strong>
             <a role="button" class="btn btn-xs btn-success float-right" href="{{route('forms.create')}}">Create</a>
         </div>
+        @if (\Session::has('message'))
+            <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <strong>{{\Session::get('message')}}</strong>
+            </div>
+        @endif
         <div class="card-body">
             <div class="row">
                 <div class="col-md-7 offset-6 float-right">
@@ -14,7 +23,7 @@
                 </div>
             </div>
            <div id="allDataSearch">
-
+               @include('form.table', ['forms' => $forms])
            </div>
         </div>
     </div>
@@ -69,11 +78,10 @@
         }
         $(document).ready(function()
         {
-            fetch();
             $(document).on('click', '.paginate>nav>.pagination a', function (e) {
                 e.preventDefault();
                 var url = $(this).attr('href').split('page=')[1];
-                let fullUrl = siteUrl + "/custom?"+"&page="+url;
+                let fullUrl = "/custom?"+"&page="+url;
                 $.ajax({
                     url: fullUrl,
                     success: function (data) {
@@ -95,7 +103,7 @@
                         //history.pushState('','',fa);
                     }
                 });
-                console.log($(this).attr('href'));
+                // console.log($(this).attr('href'));
             });
         });
     </script>
