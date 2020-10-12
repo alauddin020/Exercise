@@ -13,13 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Route::get('/', function () {
+//    return view('form.choose');
+//});
+//Route::resource('forms','FormController');
+//
+//Route::get('custom','FormController@custom')->name('custom');
+//
+//Auth::routes(['login'=>false,'register'=>false]);
+//
+//Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('/', function () {
-    return view('form.choose');
+    return redirect()->route('quiz.index');
 });
-Route::resource('forms','FormController');
-
-Route::get('custom','FormController@custom')->name('custom');
-
-Auth::routes(['login'=>false,'register'=>false]);
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('quiz','QuizController');

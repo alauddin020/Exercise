@@ -11,6 +11,6 @@ class FormSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\Form::class, 100000)->create();
+        factory(\App\Form::class, 10)->create();
     }
 }
