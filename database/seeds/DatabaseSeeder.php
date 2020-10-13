@@ -11,6 +11,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(FormSeeder::class);
+        $this->call([
+            FormSeeder::class,
+            QuizSeeder::class,
+        ]);
     }
 }

@@ -20,9 +20,9 @@ use Illuminate\Support\Facades\Route;
 //
 //Route::get('custom','FormController@custom')->name('custom');
 //
-//Auth::routes(['login'=>false,'register'=>false]);
-//
-//Route::get('/home', 'HomeController@index')->name('home');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/', function () {
     return redirect()->route('quiz.index');

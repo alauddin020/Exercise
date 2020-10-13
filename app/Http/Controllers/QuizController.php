@@ -21,7 +21,6 @@ class QuizController extends Controller
     {
        return view('quiz.create');
     }
-
     public function store(Request $request)
     {
         if ($request->ajax())
@@ -40,6 +39,10 @@ class QuizController extends Controller
         return redirect()->back()->with('fa','Quiz Create Successfully');
     }
 
+    public function import(Request $request)
+    {
+
+    }
     public function saveToJson()
     {
         $name = Str::random();
