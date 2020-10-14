@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('paginate', 'PaginateController@simple');
 Route::get('/profile', 'HomeController@profile')->name('profile');
 Route::post('/profile', 'HomeController@profileActive');
 Route::put('/profile', 'HomeController@password');
