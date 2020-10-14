@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Question;
 use App\Quiz;
 use App\Services\MCQService;
 use Illuminate\Http\Request;
@@ -10,7 +11,10 @@ use Illuminate\Support\Str;
 
 class QuizController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
        $quizzes = Quiz::with('question.option')->get();
@@ -39,66 +43,48 @@ class QuizController extends Controller
         return redirect()->back()->with('fa','Quiz Create Successfully');
     }
 
-    public function import(Request $request)
-    {
-
-    }
     public function saveToJson()
     {
         $name = Str::random();
-         $quiz = Quiz::with(['question.option'])->get()->map(function ($data){
-            return [
-                'round' => $data->name,
-                'pointsAddedForCorrectAnswer' => $data->points,
-                'question' => $data->question->map(function ($a){
-                    return [
-                        'questionText' => $a->name,
-                        'option' => $a->option->map(function ($b){
-                            return [
-                                'answerText' => $b->option,
-                                'isCorrect' => $b->correct==1 ? true : false,
-                            ];
-                        })
-                    ];
-                })
-            ];
-        });
-
+        $quiz = Quiz::with(['question.option'])->get();
+        $quiz = $this->json($quiz);
         Storage::disk('public')->put('json/'.$name.'.json', $quiz);
         return "/storage/json/$name.json";
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+
+    public function show(Request $request,$id)
     {
-        //
+        $quiz = Quiz::with(['question.option'])->findOrFail($id);
+        if ($request->has('a'))
+        {
+            $quizF = new Quiz();
+            $quizF->round = $quiz->name;
+            $quizF->pointsAddedForCorrectAnswer = $quiz->name;
+            $quizF->question = $this->map($quiz->question);
+            $name = Str::random();
+            Storage::disk('public')->put('json/'.$name.'.json', $quizF);
+            $file =  public_path()."/storage/json/$name.json";
+            return response()->download($file)->deleteFileAfterSend();
+        }
+        return view('quiz.view',compact('quiz'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
-        //
+        $quiz = Quiz::with('question.option')->findOrFail($id);
+        return view('quiz.edit',compact('quiz'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request,$id)
     {
-        //
+        $quiz = Quiz::findOrFail($id);
+        $quiz->name = $request->name;
+        $quiz->points = $request->positive_marks;
+        $quiz->save();
+        Question::where('quiz_id',$id)->forceDelete();
+        MCQService::mcq($quiz,$request);
+        return redirect()->back()->with('fa','Quiz Updated Successfully');
     }
 
     /**
@@ -110,5 +96,31 @@ class QuizController extends Controller
     public function destroy($id)
     {
         Quiz::destroy($id);
+    }
+
+    public function json($data)
+    {
+       return $data->map(function ($data) {
+            return [
+                'round' => $data->name,
+                'pointsAddedForCorrectAnswer' => $data->points,
+                'question' => $this->map($data->question)
+            ];
+        });
+    }
+
+    public function map($data)
+    {
+        return $data->map(function ($a) {
+            return [
+                'questionText' => $a->name,
+                'option' => $a->option->map(function ($b) {
+                    return [
+                        'answerText' => $b->option,
+                        'isCorrect' => $b->correct == 1 ? true : false,
+                    ];
+                })
+            ];
+        });
     }
 }

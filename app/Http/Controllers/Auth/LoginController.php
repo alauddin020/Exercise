@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -36,5 +37,16 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->email_verified_at == null)
+        {
+            //php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="migrations"
+            $this->guard()->logout();
+            $request->session()->invalidate();
+            return redirect()->route('login')->with('active','Your account is not active')->withInput($request->all());
+        }
     }
 }

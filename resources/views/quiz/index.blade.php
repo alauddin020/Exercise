@@ -29,7 +29,11 @@
                         <td>{{$key+1}}</td>
                         <td>{{$quiz->name}}</td>
                         <td>
+                            <a role="button"  href="{{route('quiz.show',$quiz->id)}}" class="btn btn-sm btn-primary">View</a>
+                            <a role="button"  href="{{route('quiz.edit',$quiz->id)}}" class="btn btn-sm btn-success">Edit</a>
                             <button type="button"  onclick="deleteQuiz('{{$quiz->id}}','{{route('quiz.destroy',$quiz->id)}}')" class="btn btn-sm btn-danger">Delete</button>
+                            <a role="button"  href="{{route('quiz.show',$quiz->id.'?a=d')}}" class="btn btn-sm btn-secondary">Download</a>
+{{--                            <button type="button"  onclick="download('{{$quiz->id}}')" class="btn btn-sm btn-secondary">Download</button>--}}
                         </td>
                     </tr>
                 @endforeach
@@ -50,6 +54,16 @@
                 success: function (data){
                     btn.html('Save Json')
                     $('#json').show().attr("href",data);
+                }
+            })
+        }
+        download=(id)=>{
+            $.ajax({
+                url: '{{route('download')}}',
+                type : 'POST',
+                data: {id:id,_token:'{{csrf_token()}}'},
+                success: function (data){
+
                 }
             })
         }

@@ -21,13 +21,13 @@ class MCQService
         {
             try {
                 $question= new Question();
-                $question->name=$text;
+                $question->name=trim($text);
                 $question->quiz_id=$quiz->id;
                 $question->save();
 
                 $questionsoption= new QuestionOption();
                 $questionsoption->question_id=$question->id;
-                $questionsoption->option= $option1[$key];
+                $questionsoption->option= trim($option1[$key]);
                 if($request->input('correct'.$correct)==1)
                     $questionsoption->correct=1;
                 else
@@ -37,7 +37,7 @@ class MCQService
 
                 $questionsoption= new QuestionOption();
                 $questionsoption->question_id=$question->id;
-                $questionsoption->option= $option2[$key];
+                $questionsoption->option= trim($option2[$key]);
                 if($request->input('correct'.$correct)==2)
                     $questionsoption->correct=1;
                 else
@@ -47,7 +47,7 @@ class MCQService
 
                 $questionsoption= new QuestionOption();
                 $questionsoption->question_id=$question->id;
-                $questionsoption->option= $option3[$key];
+                $questionsoption->option= trim($option3[$key]);
                 if($request->input('correct'.$correct)==3)
                     $questionsoption->correct=1;
                 else
@@ -56,7 +56,7 @@ class MCQService
 
                 $questionsoption= new QuestionOption();
                 $questionsoption->question_id=$question->id;
-                $questionsoption->option= $option4[$key];
+                $questionsoption->option= trim($option4[$key]);
                 if($request->input('correct'.$correct)==4)
                     $questionsoption->correct=1;
                 else

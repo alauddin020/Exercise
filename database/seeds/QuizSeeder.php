@@ -121,12 +121,16 @@ class QuizSeeder extends Seeder
         '30 compressions: 2 rescue breaths.',
         'Defibrillation. 911/112. CPR. Advanced care.'
         ];
+        $quiz = new Quiz();
+        $quiz->name = 'quiz';
+        $quiz->points = 1;
+        $quiz->save();
         foreach ($quizzes as $key=>$text)
         {
             try {
                 $question= new Question();
                 $question->name=$text;
-                $question->quiz_id=3;
+                $question->quiz_id=1;
                 $question->save();
 
                 $questionsoption= new QuestionOption();

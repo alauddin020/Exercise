@@ -61,6 +61,9 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('profile') }}">
+                                        {{ __('Profile') }}
+                                    </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -77,8 +80,26 @@
                 </div>
             </div>
         </nav>
-           <div class="container-lg">
-               @yield('content')
+           <div class="container-lg mt-2">
+               <div class="row">
+                       @auth
+                   <div class="col-md-4">
+                           <div class="list-group">
+                               <button type="button" class="list-group-item list-group-item-action active">
+                                   {{Auth::user()->name}}
+                                  ( <sub>{{Auth::user()->roles[0]->name}}</sub>)
+                               </button>
+                               @if (Auth::user()->hasRole('superadmin'))
+                                   <a role="button" href="{{route('home')}}" class="list-group-item list-group-item-action">User List</a>
+                               @endif
+                               <a role="button" href="{{route('quiz.index')}}" class="list-group-item list-group-item-action">Quiz</a>
+                           </div>
+                   </div>
+                       @endauth
+                   <div class="@guest col-md-12 @else col-md-8 @endguest">
+                       @yield('content')
+                   </div>
+               </div>
            </div>
     </div>
 @yield('js')

@@ -23,8 +23,12 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/profile', 'HomeController@profile')->name('profile');
+Route::post('/profile', 'HomeController@profileActive');
+Route::put('/profile', 'HomeController@password');
 
 Route::get('/', function () {
-    return redirect()->route('quiz.index');
+    return redirect()->route('login');
 });
+Route::post('quiz/download','QuizController@download')->name('download');
 Route::resource('quiz','QuizController');

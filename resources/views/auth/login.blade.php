@@ -48,6 +48,11 @@
                                         {{ __('Remember Me') }}
                                     </label>
                                 </div>
+                                <label class="form-check-label text-danger" for="remember">
+                                    @if (\Session::has('active'))
+                                        {{\Session::get('active')}}
+                                    @endif
+                                </label>
                             </div>
                         </div>
 
